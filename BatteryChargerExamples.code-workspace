@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "examples/BatteryChargerSimpleTest"
+		},
+		{
+			"path": "examples/BatteryChargerFullTest"
+		}
+	],
+  "settings": {}
+}

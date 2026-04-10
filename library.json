@@ -1,0 +1,34 @@
+{
+	"name": "BatteryCharger",
+	"version": "1.0.0",
+	"description": "Li-Ion battery charger management library with voltage measurement, charge status monitoring, and optional temperature/current sensing for ESP32 and Arduino platforms.",
+	"keywords": "battery, charger, li-ion, voltage, measurement, adc, temperature, current, status-led",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/epsilonrt/BatteryCharger"
+	},
+	"authors": [
+		{
+			"name": "Pascal JEAN",
+			"email": "pascal.jean@epsilonrt.fr",
+			"url": "https://github.com/epsilonrt",
+			"maintainer": true
+		}
+	],
+	"license": "BSD-3-Clause",
+	"platforms": [
+		"espressif32"
+	],
+	"frameworks": [
+		"arduino"
+	],
+	"libArchive": false,
+	"includePath": [
+		"include"
+	],
+	"srcFilter": [
+		"+<src/*>",
+		"-<examples>"
+	],
+	"homepage": "https://github.com/epsilonrt/BatteryCharger"
+}

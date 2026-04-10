@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment:
+          - makergo_c6_supermini
+          - waveshare_esp32_s3_zero
+          - adafruit_feather_esp32_v2
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Build BatteryCharger example for ${{ matrix.environment }}
+        run: |
+          cd examples/BatteryChargerSimpleTest
+          pio run -e ${{ matrix.environment }}
+        working-directory: ./

@@ -1,6 +1,6 @@
 {
 	"name": "BatteryCharger",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Li-Ion battery charger management library with voltage measurement, charge status monitoring, and optional temperature/current sensing for ESP32 and Arduino platforms.",
 	"keywords": "battery, charger, li-ion, voltage, measurement, adc, temperature, current, status-led",
 	"repository": {

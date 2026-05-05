@@ -1,0 +1,57 @@
+name: Block external PRs to main
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+    branches:
+      - main
+
+jobs:
+  block_external:
+    permissions:
+      pull-requests: write
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if author is a repository collaborator
+        id: check-collab
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Check the permission level of the PR author
+            const { owner, repo } = context.repo;
+            const prUser = context.payload.pull_request.user.login;
+            let permission = 'none';
+
+            try {
+              const response = await github.rest.repos.getCollaboratorPermissionLevel({
+                owner,
+                repo,
+                username: prUser
+              });
+              permission = response.data.permission;
+            } catch (error) {
+              core.info(`Unable to determine collaborator permission for ${prUser}: ${error.message}`);
+            }
+
+            core.setOutput('permission', permission);
+
+      - name: Close PR and redirect to dev branch if not a maintainer
+        if: steps.check-collab.outputs.permission != 'write' && steps.check-collab.outputs.permission != 'maintain' && steps.check-collab.outputs.permission != 'admin'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Close the PR and post a comment if the author does not have write/maintain/admin permissions
+            const prNumber = context.payload.pull_request.number;
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+              state: 'closed'
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: "Thank you for your contribution! Pull requests to `main` are reserved for maintainers. Please target the `dev` branch instead."
+            });

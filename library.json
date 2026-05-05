@@ -24,7 +24,7 @@
 	],
 	"libArchive": false,
 	"includePath": [
-		"include"
+		"src"
 	],
 	"srcFilter": [
 		"+<src/*>",

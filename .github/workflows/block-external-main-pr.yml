@@ -1,0 +1,45 @@
+name: Block external PRs to main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  block_external:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if author is a repository collaborator
+        id: check-collab
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Check the permission level of the PR author
+            const { owner, repo } = context.repo;
+            const prUser = context.payload.pull_request.user.login;
+            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner,
+              repo,
+              username: prUser
+            });
+            core.setOutput('permission', permission.data.permission);
+
+      - name: Close PR if not write/admin
+        if: steps.check-collab.outputs.permission != 'write' && steps.check-collab.outputs.permission != 'admin'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Close the PR and post a comment if the author does not have write/admin permissions
+            const prNumber = context.payload.pull_request.number;
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+              state: 'closed'
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: "Thank you for your contribution! Pull requests to `main` are reserved for maintainers. Please target the `dev` branch instead."
+            });

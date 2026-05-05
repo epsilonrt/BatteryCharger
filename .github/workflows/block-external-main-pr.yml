@@ -36,12 +36,12 @@ jobs:
 
             core.setOutput('permission', permission);
 
-      - name: Close PR if not write/maintain/admin
+      - name: Close PR and redirect to dev branch if not a maintainer
         if: steps.check-collab.outputs.permission != 'write' && steps.check-collab.outputs.permission != 'maintain' && steps.check-collab.outputs.permission != 'admin'
         uses: actions/github-script@v7
         with:
           script: |
-            // Close the PR and post a comment if the author does not have write/admin permissions
+            // Close the PR and post a comment if the author does not have write/maintain/admin permissions
             const prNumber = context.payload.pull_request.number;
             await github.rest.pulls.update({
               owner: context.repo.owner,

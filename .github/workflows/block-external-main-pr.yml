@@ -1,12 +1,15 @@
 name: Block external PRs to main
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - main
 
 jobs:
   block_external:
+    permissions:
+      pull-requests: write
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Check if author is a repository collaborator

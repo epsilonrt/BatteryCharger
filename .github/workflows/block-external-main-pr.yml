@@ -20,12 +20,20 @@ jobs:
             // Check the permission level of the PR author
             const { owner, repo } = context.repo;
             const prUser = context.payload.pull_request.user.login;
-            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
-              owner,
-              repo,
-              username: prUser
-            });
-            core.setOutput('permission', permission.data.permission);
+            let permission = 'none';
+
+            try {
+              const response = await github.rest.repos.getCollaboratorPermissionLevel({
+                owner,
+                repo,
+                username: prUser
+              });
+              permission = response.data.permission;
+            } catch (error) {
+              core.info(`Unable to determine collaborator permission for ${prUser}: ${error.message}`);
+            }
+
+            core.setOutput('permission', permission);
 
       - name: Close PR if not write/admin
         if: steps.check-collab.outputs.permission != 'write' && steps.check-collab.outputs.permission != 'admin'

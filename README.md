@@ -44,12 +44,13 @@ This places the TEMP node near 50% of battery voltage at 25 C, which matches wel
 
 ## Installation
 
+
 ### PlatformIO (Recommended)
-Add to `platformio.ini`:
-```ini
-lib_deps =
-    BatteryCharger @ ^1.0.0
-```
+
+Please follow the official installation instructions on the PlatformIO Registry:
+https://registry.platformio.org/libraries/epsilonrt/BatteryCharger/installation
+
+This link will always provide the most up-to-date and recommended method for installing the BatteryCharger library with PlatformIO.
 
 ### Arduino IDE
 1. Download the library as ZIP from repository
